@@ -1,0 +1,40 @@
+FROM debian:testing-slim as git
+
+RUN apt-get update -q \
+  && apt-get install -qy --no-install-recommends \
+    ca-certificates \
+    wget \
+  && rm -rf /var/lib/apt/lists/*
+
+ARG VERSION=0.3.9
+RUN wget -q -O JMusicBot.jar -- https://github.com/jagrosh/MusicBot/releases/download/$VERSION/JMusicBot-$VERSION.jar
+
+#--------------#
+
+FROM openjdk:11-jre-slim
+
+ARG VERSION
+
+LABEL maintainer="Osama <support@ousama.dev>" \
+  org.opencontainers.image.created=$BUILD_DATE \
+  org.opencontainers.image.authors="Osama <support@ousama.dev>" \
+  org.opencontainers.image.url="https://github.com/ousama-altamimi/Docker/tree/main/JMusicBot" \
+  org.opencontainers.image.documentation="https://github.com/jagrosh/MusicBot/wiki/" \
+  org.opencontainers.image.source="https://github.com/ousama-altamimi/Docker" \
+  org.opencontainers.image.version=$VERSION \
+  org.opencontainers.image.revision=$REVISION \
+  org.opencontainers.image.vendor="ousama-altamimi" \
+  org.opencontainers.image.licenses="Apache-2.0" \
+  org.opencontainers.image.title="JMusicBot" \
+  org.opencontainers.image.description="🎶 A Discord music bot that's easy to set up and run yourself!"
+
+RUN export user=MusicBot \
+  && groupadd -r $user && useradd -r -g $user $user
+
+COPY --from=git [ "/JMusicBot.jar", "/JMusicBot.jar" ]
+
+RUN ln -rs /data/config.txt /config.txt \
+  && ln -rs /data/Playlists /Playlists
+
+WORKDIR /data
+CMD [ "java", "-Dnogui=true", "-jar", "/JMusicBot.jar" ]
