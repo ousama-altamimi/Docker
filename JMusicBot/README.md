@@ -17,7 +17,7 @@ docker run -dit \
   --name=JMusicBot \  
   -v $HOME/MusicBot:/data \
   --restart=unless-stopped \
-  ghcr.io/ousama-altamimi/jmusicbot
+  osama144/jmusicbot
 ```
 
 ### 🐳 Docker Compose
@@ -27,7 +27,7 @@ version: "3"
 services:
   jmusicbot:
     container_name: JMusicBot
-    image: ghcr.io/ousama-altamimi/jmusicbot
+    image: osama144/jmusicbot
     restart: unless-stopped
     volumes:
       - $HOME/MusicBot:/data
