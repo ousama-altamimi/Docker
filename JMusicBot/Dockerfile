@@ -28,7 +28,7 @@ LABEL maintainer="Osama <support@ousama.dev>" \
   org.opencontainers.image.title="JMusicBot" \
   org.opencontainers.image.description="🎶 A Discord music bot that's easy to set up and run yourself!"
 
-RUN export user=MusicBot \
+RUN export user=JMusicBot \
   && groupadd -r $user && useradd -r -g $user $user
 
 COPY --from=git [ "/JMusicBot.jar", "/JMusicBot.jar" ]
